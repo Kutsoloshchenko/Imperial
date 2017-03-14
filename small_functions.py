@@ -62,7 +62,9 @@ def info():
 
 def your_face(message,id,faces):
     attachment= 'photo'+id+'_'+str(choice(faces))
-    text = u'Твоё' + message['body'][8:]
+    text = message['body'].lower().split('лицо')
+    text = 'Лицо ' + text[1].lstrip()
+#    text = u'Твоё' + message['body'][8:]
     return (text,attachment)
 
 def how_is_it(message,id):

@@ -145,7 +145,7 @@ class Imperial():
                     self.send_to_chat(message, u'Пускай АЛЬМСИВИ охраняют твой сон!',reply=1)
                 elif u'доброе утро' in message['body'].lower():
                     self.send_to_chat(message, u'Доброе утро! Говорите свободно!',reply=1)
-                elif u'мперец, лицо' in message['body'].lower():
+                elif u'лицо' in message['body'].lower():
                     text_face=your_face(message,self.id,self.faces)
                     self.send_to_chat(message, text_face[0], attachment=text_face[1])
                 elif u'помощь' in message['body'].lower():

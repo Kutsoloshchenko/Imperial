@@ -29,6 +29,7 @@ class Imperial():
         self.get_chats_lenth()
         self.kicker = Kicker(self.bot, chat_id = '6', DB = self.ORM)
         self.timeout = 0
+        self.counter = 0
 
     def get_chats_lenth(self):
       chats = self.bot.messages.searchDialogs(fields='chat_id')
@@ -161,9 +162,11 @@ class Imperial():
                     if not self.timeout:
                         attachment = self.image_handler.get_image_from_internet(message['body'].lower()[16:])
                         self.send_to_chat(message, 'Вот чё я нарыл',attachment=attachment)
-                        self.timeout = 300
+                        self.counter+=1
+                        if self.counter == 5:
+                            self.timeout = 250
                     else:
-                        self.send__to_chat(message, 'Я прячусь от капчи еще примерно %d секунд') % int(self.timeout//2)
+                        self.send_to_chat(message, 'Я прячусь от капчи еще примерно %s секунд' % str(self.timeout//2)) 
                 elif u'комикс' in message['body'].lower():
                     self.choose_comic(message)
                 elif u'репост' in message['body'].lower():
@@ -266,11 +269,16 @@ class Imperial():
 if __name__ == '__main__':
   Reginald = Imperial()
   k= 1
+  h = 100
   while k:
       time.sleep(0.5)
       Reginald.search(get_unread_message(Reginald.bot))
       time.sleep(0.5)
       if Reginald.timeout > 0:
         Reginald.timeout-=1
+      h-= 1
+      if h <=0:
+            h = 100
+            Reginald.counter = 0
       Reginald.auto_kick()
 

@@ -78,3 +78,4 @@ def how_is_it(message,id):
             return (u'Вот',0,attachment)
     else:
         return (u'Картинку припрепи, мудила',0,0)
+

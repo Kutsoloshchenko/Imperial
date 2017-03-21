@@ -10,7 +10,7 @@ from small_functions import *
 import weather
 from kick import Kicker
 import kind_mail
-import comic
+import imagehandler
 import orm
 
 class Imperial():
@@ -24,7 +24,7 @@ class Imperial():
         self.get_help()
         self.cotsman_array = []
         self.mailer = kind_mail.Kind_mail(self.bot,self.ORM)
-        self.comic = comic.Comic(self.bot)
+        self.image_handler = imagehandler.ImageHandler(self.bot)
         self.responce_to_wish = [u'Можно',u'Нельзя',u'Не лезь блядь, дебил сука ебаный, она тебя сожрет', u'Может ты еще хочешь что бы тебя орально удовлетворили? А, петушок?', u'И я так хочу', u'Ну если за Императора, то можно!']
         self.get_chats_lenth()
         self.kicker = Kicker(self.bot, chat_id = '6', DB = self.ORM)
@@ -71,7 +71,7 @@ class Imperial():
             token = 1
         elif u'циан' in message['body'].lower():
             token = 3
-        text = self.comic.get_comic(token)
+        text = self.image_handler.get_comic(token)
         text_1 = text[0] + ' (' + text[1] + ')'
         self.send_to_chat(message, text_1, attachment=text[2])
 
@@ -156,6 +156,9 @@ class Imperial():
                     self.send_to_chat(message,love(message,self.bot),reply=1)
                 elif u'мперец, вики' in message['body'].lower():
                     self.wiki(message)
+                elif u'мперец, покажи' in message['body'].lower():
+                    attachment = self.image_handler.get_image_from_internet(message['body'].lower()[16:])
+                    self.send_to_chat(message, 'Вот чё я нарыл',attachment=attachment)
                 elif u'комикс' in message['body'].lower():
                     self.choose_comic(message)
                 elif u'репост' in message['body'].lower():

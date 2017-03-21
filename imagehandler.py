@@ -7,6 +7,20 @@ from random import choice
 class ImageHandler:
     def __init__(self,bot):
         self.bot = bot
+        self.header = {
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.116 Safari/537.36',
+            'authority': 'www.google.com.ua',
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'cache-control': 'no-cache',
+            'cookie': 'GoogleAccountsLocale_session=uk; SID=sgM9LhHTCLSnY2a_TJQauQUKnkdWY76UNFyIPI1vYwukukVqbCnCawY_LfFchfMWcLKoCw.'
+                      '; HSID=AQsbTR4gA6VQ6lly0; SSID=ATKwDi3kM9tpV7Z0b; APISID=iBLpH3KD3E1HoOS5/ABeYs14_Z2htYKWOc; SAPISID=DC_knTFe0'
+                      'ketK9hf/AkO0jscVfwDLKTNJr; gsScrollPos=; NID=91=aHD78dyWxlYeiG9Q39PTzBJ1M_cl7yCStmnEXP-Raz8jS0E4pzTidYJ9xmpUyXi'
+                      'u88vF5qMqf4s8IZrVSDwzfwV7llEv1WSzJnqr3EkjVUWGrELjCIvWCvBPbOYZrAfP-nmlVog5YKk2Sd_ppsUIhUQ91VRPEBf6Bj5EG-qqmZpSMV0T_'
+                      'FFIUzpjGryw3iEIAgOYVAAHFFFeXYT0nY-1NvctX7BeUh469wbtLg8V5gRs5WhBzHe60YdbXTy9kmTB9fk10UzDmECrLlviXHsjcCJFPRiV_G7k-aPuw'
+                      'BOAIVF4kG6T1SH9wNFDmsKqjD4PXAEwuGRA; DV=8gaJBx4lumhUdHYlUOqQ27KALAsrsYp1t9qk4xdSSgAAAGi_HyiQoPh5HgAAAHYmAof2gwtfCAAAwKWzpxMh7oMhXuQBAA',
+            'pragma': 'no - cache',
+            'x-client-data': 'CJC2yQEIpbbJAQ=='
+        }
 
     def _get_beartato(self):
         responce = requests.get('http://nedroid.com//?randomcomic=1')
@@ -45,12 +59,12 @@ class ImageHandler:
         return ('Cyanide and Happiness', u'циан', attachment)
 
     def get_image_from_internet(self, search_query):
-        string = ''.join(i+'&' for i in search_query.split()) #+ for yandex
-        #search = 'https://yandex.ua/images/search?text==%s' \
-        #         '&isize=large&isize=wallpaper&wp=wh5x4_1280x1024' % string[:-1]
-        search = 'https://www.google.com.ua/search?as_st=y&tbm=isch&hl=uk&as_q%s' \
-                 'google&as_epq=&as_oq=&as_eq=&cr=&as_sitesearch=&safe=images&tbs=isz:l' % string[:-1]
-        responce = requests.get(search)
+        string = ''.join(i+'&' for i in search_query.split())
+        path = '/search?q=%s&oq=%s&aqs=chrome..69i57j0l5.863j0j8&sourceid=chrome&es_sm=93&ie=UTF-8' % (string[:-1], string[:-1])
+        self.header['path'] = path
+        search = 'https://www.google.com.ua/search?as_st=y&tbm=isch&hl=ru&as_q=%s' \
+                 '&as_st=y&hl=ru&tbs=isz:lt,islt:2mp&tbm=isch&*' % string[:-1]
+        responce = requests.get(search, self.header)
         page = html.fromstring(responce.content)
         image_item = page.xpath('//img')
         image = choice(image_item)
@@ -59,17 +73,24 @@ class ImageHandler:
         self._safe_image(image_source)
         return self._upload_image()
 
-        # https://yandex.ua/images/search?text=%D0%BE%D1%80%D0%BA&isize=large&isize=wallpaper&wp=wh5x4_1280x1024
-        # https://www.google.com.ua/advanced_image_search?q= &as_st=y&hl=ru&biw=1218&bih=658&dpr=1&bav=on.2,or.r_cp.&bvm=bv.150120842,d.bGs&tbs=isz:lt,islt:2mp&tbm=isch
-        # https://www.google.com.ua/search?as_st=y&tbm=isch&hl=ru&as_q=орк&as_epq=&as_oq=&as_eq=&cr=&as_sitesearch=&safe=images&tbs=isz:lt,islt:xga
-        # https://www.youtube.com/results?search_query=tekken+tag+tournament
-        # https://www.google.com.ua/search?as_st=y&tbm=isch&hl=ru&as_q=HERE&as_epq=&as_oq=&as_eq=&cr=&as_sitesearch=&safe=images&tbs=isz:lt,islt:2mp
-
     def _safe_image(self, image_source):
         responce = requests.get(image_source)
         file = open('temp.gif','wb')
         file.write(responce.content)
         file.close()
+
+    def video_from_internet(self, search_query):
+        string = ''.join(i + '+' for i in search_query.split())
+        search = 'https://www.youtube.com/results?search_query=%s' % string[:-1]
+        responce = requests.get(search)
+        page = html.fromstring(responce.content)
+        link = page.xpath('//a')
+        link = choice(link[50:81])
+        link = link.get('href')
+        link = 'https://www.youtube.com' + link
+        print(link)
+        return link
+
 
     def _upload_image(self):
         upload_server=self.bot.photos.getMessagesUploadServer()['upload_url']

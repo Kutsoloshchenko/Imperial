@@ -154,19 +154,20 @@ class Imperial():
                     self.send_to_chat(message=message,text=self.help_file)
                 elif u'кто здесь' in message['body'].lower():
                     self.send_to_chat(message,who_is_who(message,self.bot),reply=1)
+                elif u'мперец, покажи' in message['body'].lower():
+                    attachment = self.image_handler.get_image_from_internet(message['body'].lower()[16:])
+                    self.send_to_chat(message, 'Вот чё я нарыл',attachment=attachment)
                 elif u'любовь' in message['body'].lower():
                     self.send_to_chat(message,love(message,self.bot),reply=1)
                 elif u'мперец, вики' in message['body'].lower():
                     self.wiki(message)
+                elif u'мперец, видео' in message['body'].lower():
+                    text = self.image_handler.video_from_internet(message['body'].lower()[15:])
+                    text = 'Смари %s' % text
+                    self.send_to_chat(message, text)
                 elif u'мперец, покажи' in message['body'].lower():
-                    if not self.timeout:
                         attachment = self.image_handler.get_image_from_internet(message['body'].lower()[16:])
                         self.send_to_chat(message, 'Вот чё я нарыл',attachment=attachment)
-                        self.counter+=1
-                        if self.counter == 5:
-                            self.timeout = 250
-                    else:
-                        self.send_to_chat(message, 'Я прячусь от капчи еще примерно %s секунд' % str(self.timeout//2)) 
                 elif u'комикс' in message['body'].lower():
                     self.choose_comic(message)
                 elif u'репост' in message['body'].lower():

@@ -24,7 +24,7 @@ class Imperial():
         self.get_help()
         self.cotsman_array = []
         self.mailer = kind_mail.Kind_mail(self.bot,self.ORM)
-        self.image_handler = imagehandler.Comic(self.bot)
+        self.image_handler = imagehandler.ImageHandler(self.bot)
         self.responce_to_wish = [u'Можно',u'Нельзя',u'Не лезь блядь, дебил сука ебаный, она тебя сожрет', u'Может ты еще хочешь что бы тебя орально удовлетворили? А, петушок?', u'И я так хочу', u'Ну если за Императора, то можно!']
         self.get_chats_lenth()
         self.kicker = Kicker(self.bot, chat_id = '6', DB = self.ORM)

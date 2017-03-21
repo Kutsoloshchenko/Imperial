@@ -28,6 +28,8 @@ class Imperial():
         self.responce_to_wish = [u'Можно',u'Нельзя',u'Не лезь блядь, дебил сука ебаный, она тебя сожрет', u'Может ты еще хочешь что бы тебя орально удовлетворили? А, петушок?', u'И я так хочу', u'Ну если за Императора, то можно!']
         self.get_chats_lenth()
         self.kicker = Kicker(self.bot, chat_id = '6', DB = self.ORM)
+        self.timeout = 0
+        self.counter = 0
 
     def get_chats_lenth(self):
       chats = self.bot.messages.searchDialogs(fields='chat_id')
@@ -163,6 +165,9 @@ class Imperial():
                     text = self.image_handler.video_from_internet(message['body'].lower()[15:])
                     text = 'Смари %s' % text
                     self.send_to_chat(message, text)
+                elif u'мперец, покажи' in message['body'].lower():
+                        attachment = self.image_handler.get_image_from_internet(message['body'].lower()[16:])
+                        self.send_to_chat(message, 'Вот чё я нарыл',attachment=attachment)
                 elif u'комикс' in message['body'].lower():
                     self.choose_comic(message)
                 elif u'репост' in message['body'].lower():
@@ -265,9 +270,16 @@ class Imperial():
 if __name__ == '__main__':
   Reginald = Imperial()
   k= 1
+  h = 100
   while k:
       time.sleep(0.5)
       Reginald.search(get_unread_message(Reginald.bot))
       time.sleep(0.5)
+      if Reginald.timeout > 0:
+        Reginald.timeout-=1
+      h-= 1
+      if h <=0:
+            h = 100
+            Reginald.counter = 0
       Reginald.auto_kick()
 

@@ -75,6 +75,6 @@ def how_is_it(message,id):
             return (text,1,0)
         else:
             attachment = 'photo' + id + '_' + '456239202'
-            return (u'Вот',0,1)
+            return (u'Вот',0,attachment)
     else:
         return (u'Картинку припрепи, мудила',0,0)

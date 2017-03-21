@@ -45,15 +45,17 @@ class ImageHandler:
         return ('Cyanide and Happiness', u'циан', attachment)
 
     def get_image_from_internet(self, search_query):
-        string = ''.join(i+'+' for i in search_query.split())
-        search = 'https://yandex.ua/images/search?text==%s' \
-                 '&isize=large&isize=wallpaper&wp=wh5x4_1280x1024' % string[:-1]
+        string = ''.join(i+'&' for i in search_query.split()) #+ for yandex
+        #search = 'https://yandex.ua/images/search?text==%s' \
+        #         '&isize=large&isize=wallpaper&wp=wh5x4_1280x1024' % string[:-1]
+        search = 'https://www.google.com.ua/search?as_st=y&tbm=isch&hl=uk&as_q%s' \
+                 'google&as_epq=&as_oq=&as_eq=&cr=&as_sitesearch=&safe=images&tbs=isz:l' % string[:-1]
         responce = requests.get(search)
         page = html.fromstring(responce.content)
         image_item = page.xpath('//img')
         image = choice(image_item)
         image_source = image.get('src')
-        image_source = 'http:' + image_source
+        #image_source = 'http:' + image_source
         self._safe_image(image_source)
         return self._upload_image()
 

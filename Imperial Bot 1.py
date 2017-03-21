@@ -28,6 +28,7 @@ class Imperial():
         self.responce_to_wish = [u'Можно',u'Нельзя',u'Не лезь блядь, дебил сука ебаный, она тебя сожрет', u'Может ты еще хочешь что бы тебя орально удовлетворили? А, петушок?', u'И я так хочу', u'Ну если за Императора, то можно!']
         self.get_chats_lenth()
         self.kicker = Kicker(self.bot, chat_id = '6', DB = self.ORM)
+        self.timeout = 0
 
     def get_chats_lenth(self):
       chats = self.bot.messages.searchDialogs(fields='chat_id')
@@ -157,8 +158,12 @@ class Imperial():
                 elif u'мперец, вики' in message['body'].lower():
                     self.wiki(message)
                 elif u'мперец, покажи' in message['body'].lower():
-                    attachment = self.image_handler.get_image_from_internet(message['body'].lower()[16:])
-                    self.send_to_chat(message, 'Вот чё я нарыл',attachment=attachment)
+                    if not self.timeout:
+                        attachment = self.image_handler.get_image_from_internet(message['body'].lower()[16:])
+                        self.send_to_chat(message, 'Вот чё я нарыл',attachment=attachment)
+                        self.timeout = 300
+                    else:
+                        self.send__to_chat(message, 'Я прячусь от капчи еще примерно %d секунд') % int(self.timeout//2)
                 elif u'комикс' in message['body'].lower():
                     self.choose_comic(message)
                 elif u'репост' in message['body'].lower():
@@ -265,5 +270,7 @@ if __name__ == '__main__':
       time.sleep(0.5)
       Reginald.search(get_unread_message(Reginald.bot))
       time.sleep(0.5)
+      if Reginald.timeout > 0:
+        Reginald.timeout-=1
       Reginald.auto_kick()
 

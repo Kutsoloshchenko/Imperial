@@ -53,7 +53,7 @@ def repost(bot):
     return attachment
 
 def choose_or(text):
-    temp = text.split(u'или')
+    temp = text.split(u' или ')
     return temp
 
 def info():
@@ -77,5 +77,5 @@ def how_is_it(message,id):
             attachment = 'photo' + id + '_' + '456239202'
             return (u'Вот',0,attachment)
     else:
-        return (u'Картинку припрепи, мудила',0,0)
+        return (u'Картинку прикрепи, мудила',0,0)
 

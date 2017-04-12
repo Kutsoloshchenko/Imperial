@@ -142,7 +142,7 @@ class Imperial():
                     self.send_to_chat(message, u'Под этим солнцем и небом мы тепло преветствуем тебя!', reply=1)
                 elif u'ролл' in message['body'].lower():
                     try:
-                        text = self.roll.roll(body)
+                        text = self.roll.roll(message['body'].lower())
                     except:
                         text = u'Что то пошло не так, еще раз давай. Давай, чо ты. Еще раз какую то херню пришли, маргинал'
                     self.send_to_chat(message, text, reply = 1)

@@ -175,6 +175,8 @@ class Imperial():
                 elif u'мперец, покажи' in message['body'].lower():
                         attachment = self.image_handler.get_image_from_internet(message['body'].lower()[16:])
                         self.send_to_chat(message, 'Вот чё я нарыл',attachment=attachment)
+                elif u'дай совет' in message['body'].lower():
+                    self.send_to_chat(message, 'Носи зимой двое штанов', reply = 1)
                 elif u'комикс' in message['body'].lower():
                     self.choose_comic(message)
                 elif u'репост' in message['body'].lower():

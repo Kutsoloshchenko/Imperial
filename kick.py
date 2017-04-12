@@ -11,20 +11,10 @@ class Kicker:
             return None
         return message.lower().replace(u'кикни', '').lstrip()
 
-    def _find_id_by_domain(self, domain_name):
-        users = self.bot.messages.getChatUsers(chat_id=self.chat_id, fields='screen_name')
-        kick_id = None
-        for user in users:
-            if 'screen_name' in user:
-                if domain_name == user['screen_name']:
-                    kick_id = user['uid']
-                    break
-        return kick_id
-
     def _check_orm(self, domain_name, kicker_id):
         db_entry = self.ORM.find_first_to_kick(domain_name)
         if not db_entry:
-            kick_id = self._find_id_by_domain(domain_name)
+            kick_id = self.bot.users.get(user_ids=id)[0]["uid"]
             self.ORM.create_entry(kick_id, domain_name, kicker_id)
             return None
         else:
@@ -32,17 +22,18 @@ class Kicker:
 
     def _check_votes(self, db_entry, kicker_id):
 
-        if int(db_entry.votes) >= 5:
-            self.bot.messages.removeChatUser(chat_id=self.chat_id, user_id=db_entry.user_id)
-            self.ORM.add_to_auto_kick(db_entry.user_id)
-            self.ORM.remove(db_entry)
-            return u'Пошёл вон, пёс'
-
         if str(kicker_id) in db_entry.voters.split():
             text = u'Дальше кик не сдвинится пока он не получит бумаги. Нужно собрать еще %d подписи, а вы уже подписывались' % (5 - db_entry.votes)
             return text
         else:
-            self.ORM.add_kicker_and_vote(db_entry,kicker_id)
+            self.ORM.add_kicker_and_vote(db_entry, kicker_id)
+
+        if int(db_entry.votes) >= 5:
+            self.bot.messages.removeChatUser(chat_id=self.chat_id, user_id=db_entry.user_id)
+            #self.ORM.add_to_auto_kick(db_entry.user_id)
+            self.ORM.remove(db_entry)
+            return u'Пошёл вон, пёс'
+        else:
             text = u'Спасибо что подписали бумаги, осталось собрать еще %d подписи' % (5 - db_entry.votes)
             return text
 

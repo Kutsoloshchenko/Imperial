@@ -20,17 +20,16 @@ class Imperial():
         self.bot= vk.API(Session)
         self.ORM= orm.DB()
         self.id = '363590949'
+        self.name = u'имперец'
         self.get_faces()
-        self.help_file= []
+        self.help_file = []
         self.get_help()
         self.cotsman_array = []
-        self.mailer = kind_mail.Kind_mail(self.bot,self.ORM)
+        self.mailer = kind_mail.Kind_mail(self.bot, self.ORM)
         self.image_handler = imagehandler.ImageHandler(self.bot)
         self.responce_to_wish = [u'Можно',u'Нельзя',u'Не лезь блядь, дебил сука ебаный, она тебя сожрет', u'Может ты еще хочешь что бы тебя орально удовлетворили? А, петушок?', u'И я так хочу', u'Ну если за Императора, то можно!']
         self.get_chats_lenth()
         self.kicker = Kicker(self.bot, chat_id = '6', DB = self.ORM)
-        self.timeout = 0
-        self.counter = 0
 
     def get_chats_lenth(self):
       chats = self.bot.messages.searchDialogs(fields='chat_id')
@@ -88,7 +87,7 @@ class Imperial():
         for photo in cotsman_raw:
             self.cotsman_photo.append(photo['pid'])
 
-    def search(self,unread_messages):
+    def search(self, unread_messages):
         for message in unread_messages:
             time.sleep(0.10)
             self.bot.messages.markAsRead(message_ids=int(message['mid']))
@@ -207,7 +206,7 @@ class Imperial():
                   self.send_to_chat(message, text=text, reply=1)
                   break
 
-    def send_to_chat(self,message,text,reply=0,attachment=0):
+    def send_to_chat(self, message, text, reply=0, attachment=0):
         if reply:
           if 'chat_id' in message:
             self.bot.messages.send(chat_id=message['chat_id'], message=text, forward_messages = message['mid'], attachment=attachment)

@@ -5,6 +5,9 @@ from random import choice
 def roll(text):
 
     all_dices = findall('\d*к\d+', text.lower())
+    
+    if len(all_dices) == 0:
+        return u'Что то пошло не так, еще раз давай. Давай, чо ты. Еще раз какую то херню пришли, маргинал'
 
     result_overall = []
 

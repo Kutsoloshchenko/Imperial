@@ -12,6 +12,7 @@ from kick import Kicker
 import kind_mail
 import imagehandler
 import orm
+import roll
 
 class Imperial():
     def __init__(self):
@@ -139,6 +140,12 @@ class Imperial():
                     self.send_to_chat(message, text=text)
                 elif u'привет' in message['body'].lower():
                     self.send_to_chat(message, u'Под этим солнцем и небом мы тепло преветствуем тебя!', reply=1)
+                elif u'ролл' in message['body'].lower():
+                    try:
+                        text = self.roll.roll(body)
+                    except:
+                        text = u'Что то пошло не так, еще раз давай. Давай, чо ты. Еще раз какую то херню пришли, маргинал'
+                    self.send_to_chat(message, text, reply = 1)
                 elif u'извинися' in message['body'].lower():
                     self.send_to_chat(message, u'Я прошу прощения за свои слова',reply=1)
                 elif u'спасибо' in message['body'].lower():

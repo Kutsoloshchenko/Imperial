@@ -7,15 +7,15 @@ def throw_dice(all_dices):
 
     for dice in all_dices:
         rolls = dice.split('к')
-        if rolls[0] != '':
+
+        if int(rolls[0]) >= 150:
+            result = 'Сам столько кидай, куропат'
+
+        elif rolls[0] != '':
             result = 0
             for i in range(int(rolls[0])):
                 result += choice(range(int(rolls[1]))) + 1
             result = str(result)
-
-        elif int(rolls[0])>=150:
-            result = 'Сам столько кидай, куропат'
-
         else:
             result = str(choice(range(int(rolls[1]))) + 1)
 
@@ -33,7 +33,11 @@ def throw_dice_confirm(all_dices):
         temp = rolls[1].split('на')
         rolls[1] = temp[0]
         rolls.append(temp[1])
-        if rolls[0] != '':
+
+        if int(rolls[0]) >= 150:
+            result = 'Сам столько кидай, куропат'
+
+        elif rolls[0] != '':
             result = 0
             for i in range(int(rolls[0])):
                 if choice(range(int(rolls[1]))) + 1 >= int(rolls[2]):

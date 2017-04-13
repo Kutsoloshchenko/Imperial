@@ -276,16 +276,9 @@ class Imperial():
 if __name__ == '__main__':
   Reginald = Imperial()
   k= 1
-  h = 100
   while k:
       time.sleep(0.5)
       Reginald.search(get_unread_message(Reginald.bot))
       time.sleep(0.5)
-      if Reginald.timeout > 0:
-        Reginald.timeout-=1
-      h-= 1
-      if h <=0:
-            h = 100
-            Reginald.counter = 0
       Reginald.auto_kick()
 

@@ -12,8 +12,13 @@ def throw_dice(all_dices):
             for i in range(int(rolls[0])):
                 result += choice(range(int(rolls[1]))) + 1
             result = str(result)
+
+        elif int(rolls[0])>=150:
+            result = 'Сам столько кидай, куропат'
+
         else:
             result = str(choice(range(int(rolls[1]))) + 1)
+
 
         result_overall.append(result)
 

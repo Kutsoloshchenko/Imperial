@@ -2,11 +2,14 @@ import requests
 from lxml import html
 import os
 from random import choice
+from ImageCreator import QuoteCreator
+import re
 
 
 class ImageHandler:
     def __init__(self,bot):
         self.bot = bot
+        self.qouter = QuoteCreator()
         self.header = {
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.116 Safari/537.36',
             'authority': 'www.google.com.ua',
@@ -75,9 +78,9 @@ class ImageHandler:
 
     def _safe_image(self, image_source):
         responce = requests.get(image_source)
-        file = open('temp.gif','wb')
-        file.write(responce.content)
-        file.close()
+        with open('temp.gif','wb') as file:
+            file.write(responce.content)
+            file.close()
 
     def video_from_internet(self, search_query):
         string = ''.join(i + '+' for i in search_query.split())
@@ -91,15 +94,28 @@ class ImageHandler:
         print(link)
         return link
 
-
     def _upload_image(self):
         upload_server=self.bot.photos.getMessagesUploadServer()['upload_url']
-        file = open('temp.gif','rb')
-        responce = requests.post(url=upload_server, files={'photo':file})
-        file.close()
-        json_file = responce.json()
-        os.system('rm temp.gif')
+        with open('temp.gif','rb') as file:
+            responce = requests.post(url=upload_server, files={'photo':file})
+            file.close()
+            json_file = responce.json()
+            os.system('rm temp.gif')
         return self.bot.photos.saveMessagesPhoto(photo=json_file['photo'], server=json_file['server'], hash=json_file['hash'])[0]['id']
+
+    def _get_from_message(self, message):
+        text = re.search("цитата:*", message)
+        author = re.search("автор:*", message)
+
+        info = self.bot.users.get(user_ids=author, fields="photo_200_orig")
+
+        author = info["first_name"] + ' ' + info["last_name"]
+
+        image_path = info["photo_200_orig"]
+
+        return text, image_path, author
+
+
 
     def get_comic(self, token):
         if not token:
@@ -110,3 +126,10 @@ class ImageHandler:
             return self._get_wh40()
         elif token == 3:
             return self._get_ch()
+
+    def create_qoute(self, message):
+        text, image, name = self._get_from_message(message)
+        self._safe_image(image)
+        self.qouter.createquote(name, text)
+        return self._upload_image()
+

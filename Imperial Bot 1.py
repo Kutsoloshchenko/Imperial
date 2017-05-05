@@ -167,6 +167,9 @@ class Imperial():
                     self.send_to_chat(message,love(message,self.bot),reply=1)
                 elif u'мперец, вики' in message['body'].lower():
                     self.wiki(message)
+                elif u'цитата' in message['body'].lower():
+                    attachment = self.image_handler.create_qoute(message['body'].lower())
+                    self.send_to_chat(message, text="О как", attachment=attachment)
                 elif u'мперец, видео' in message['body'].lower():
                     text = self.image_handler.video_from_internet(message['body'].lower()[15:])
                     text = 'Смари %s' % text

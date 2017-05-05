@@ -1,19 +1,19 @@
 from PIL import Image, ImageDraw, ImageFont
+import os
 
 
 class QuoteCreator:
     @staticmethod
     def _getFont(font_size):
-        return ImageFont.truetype('C:\\Users\\H189210\\Downloads\\arial.ttf', font_size)
+        return ImageFont.truetype(os.path.join('Impact.ttf'), font_size)
 
     @staticmethod
     def _createline(line):
         return ''.join('%s ' % i for i in line).rstrip()
 
     @staticmethod
-    def prepearimage(image_path):
-        img = Image.open(image_path)
-        img = img.resize((480, 480), Image.NEAREST)
+    def _prepearimage():
+        img = Image.open(os.path.join('.//temp.gif'))
         return img
 
     def _name_preparation(self, text):
@@ -69,7 +69,7 @@ class QuoteCreator:
 
         return font, all_lines, ychange
 
-    def createquote(self, author, text, author_image):
+    def createquote(self, author, text):
 
         if len(text) >= 1500:
             return u"Сокращай, мудила"
@@ -88,13 +88,15 @@ class QuoteCreator:
             draw.text((size[0], size[1]+y), line, (255,255,255), font=font)
             y +=ychange
 
+        author_image = self._prepearimage()
         img.paste(author_image, (img.size[0]//20, img.size[1]//5))
         author = "(c)%s" % author
         font = self._name_preparation(author)
         draw.text((img.size[0]*6//10, img.size[1]*9//10), author, (255,255,255), font=font)
 
         draw = ImageDraw.Draw(img)
-        img.save("C:\\Users\\H189210\\Downloads\\cat2.png")
+        os.system('rm temp.gif')
+        img.save("temp.gif")
 
 if __name__ == "__main__":
     h = QuoteCreator()

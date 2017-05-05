@@ -30,7 +30,7 @@ class Kicker:
 
         if int(db_entry.votes) >= 5:
             self.bot.messages.removeChatUser(chat_id=self.chat_id, user_id=db_entry.user_id)
-            #self.ORM.add_to_auto_kick(db_entry.user_id)
+            self.ORM.add_to_auto_kick(db_entry.user_id)
             self.ORM.remove(db_entry)
             return u'Пошёл вон, пёс'
         else:

@@ -105,7 +105,8 @@ class ImageHandler:
 
     def _get_from_message(self, message):
         text = re.findall(u'цитата:"(.*)"', message)
-        author = re.findall(u"автор:(.*) ", message)[0].rstrip()
+        author = re.findall(u"автор:(.*)", message)[0]
+        author = author.split()[0]
 
         info = self.bot.users.get(user_ids=author, fields="photo_200_orig")
 

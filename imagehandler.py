@@ -104,16 +104,16 @@ class ImageHandler:
         return self.bot.photos.saveMessagesPhoto(photo=json_file['photo'], server=json_file['server'], hash=json_file['hash'])[0]['id']
 
     def _get_from_message(self, message):
-        text = re.search("цитата:*", message)
-        author = re.search("автор:*", message)
+        text = re.findall('цитата:"(.*)"', message)
+        author = re.findall("автор:(.*) ", message)[0].rstrip()
 
         info = self.bot.users.get(user_ids=author, fields="photo_200_orig")
 
-        author = info["first_name"] + ' ' + info["last_name"]
+        author = info[0]["first_name"] + ' ' + info[0]["last_name"]
 
-        image_path = info["photo_200_orig"]
+        image_path = info[0]["photo_200_orig"]
 
-        return text, image_path, author
+        return text[0], image_path, author
 
 
 
